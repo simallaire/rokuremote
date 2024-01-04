@@ -167,13 +167,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:orientation="horizontal">
-                <ImageButton
-                    android:id="@+id/pushButtonSettings"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:focusable="true"
-                    android:src="@drawable/settings" />
 
                 <ImageButton
                     android:id="@+id/pushButtonPlay"
@@ -182,13 +175,7 @@
                     android:layout_weight="1"
                     android:focusable="true"
                     android:src="@drawable/playpause" />
-                <ImageButton
-                    android:id="@+id/pushButtonVolumeMute"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:focusable="true"
-                    android:src="@drawable/mute" />
+
 
             </LinearLayout>
     <LinearLayout
@@ -197,12 +184,27 @@
         android:layout_height="100dp"
         android:orientation="horizontal">
         <ImageButton
+            android:id="@+id/pushButtonVolumeMute"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:src="@drawable/mute" />
+        <ImageButton
             android:id="@+id/pushButtonKeyboard"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:focusable="true"
             android:src="@drawable/keyboard" />
+        <ImageButton
+            android:id="@+id/pushButtonSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:src="@drawable/settings" />
+
     </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
