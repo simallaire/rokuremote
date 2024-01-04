@@ -1,0 +1,229 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/verticalLayoutWidget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/horizontalLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pushButtonOn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:text="On"
+                />
+
+            <Button
+                android:id="@+id/pushButtonOff"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:text="Off"
+                 />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/horizontalLayoutHomeBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/horizontalLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/horizontalLayoutTopColArrows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/pushButtonBack"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/back" />
+            <ImageButton
+                android:id="@+id/pushButtonUp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/up" />
+
+            <ImageButton
+                android:id="@+id/pushButtonHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/home" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/horizontalLayoutMidColArrows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/pushButtonLeft"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/left" />
+
+            <Button
+                android:id="@+id/pushButtonOk"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:text="OK"
+                 />
+
+            <ImageButton
+                android:id="@+id/pushButtonRight"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:rotation="180"
+                android:src="@drawable/left" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/horizontalLayoutBotColArrows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/pushButtonRewind"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/rewind" />
+
+            <ImageButton
+                android:id="@+id/pushButtonDown"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/down" />
+
+            <ImageButton
+                android:id="@+id/pushButtonForward"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:rotation="180"
+                android:src="@drawable/rewind" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/horizontalLayoutVolume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/pushButtonVolumeDown"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/volumedown" />
+
+            <ImageButton
+                android:id="@+id/pushButtonVolumeMute"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/mute" />
+            />
+
+            <ImageButton
+                android:id="@+id/pushButtonVolumeUp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/volumeup" />
+            />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/horizontalLayoutSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+
+            <ImageButton
+                android:id="@+id/pushButtonSettings"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/settings" />
+            <ImageButton
+                android:id="@+id/pushButtonPlay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:src="@drawable/playpause" />
+
+            />
+        </LinearLayout>
+        <GridLayout
+            android:id="@+id/gridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="3">
+
+            <!-- Add the buttons for gridLayout as per your requirement -->
+            <!-- For example, pushButtonUp, pushButtonDown, pushButtonOk, etc. -->
+
+        </GridLayout>
+    </LinearLayout>
+</RelativeLayout>
