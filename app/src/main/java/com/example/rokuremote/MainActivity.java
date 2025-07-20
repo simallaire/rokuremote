@@ -147,6 +147,31 @@ public class MainActivity extends AppCompatActivity {
 
                 vibrate(50);
         });
+
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        super.onKeyDown(keyCode, event);
+        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && event.getRepeatCount() == 0)
+        {
+            Log.d ("onkeydown","volume down key");
+            vibrate(10);
+            httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeDown", "");
+            vibrate(25);
+
+        }
+        else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && event.getRepeatCount() == 0)
+        {
+            Log.d ("onkeydown","volume up key");
+            vibrate(10);
+            httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeUp", "");
+            vibrate(25);
+        }
+        return true;
     }
     private char getCharFromKeyCode(int keyCode) {
         KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
