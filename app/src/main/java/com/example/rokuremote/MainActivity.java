@@ -1,6 +1,7 @@
 package com.example.rokuremote;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +11,13 @@ import android.os.CombinedVibration;
 import android.os.StrictMode;
 import android.os.VibrationEffect;
 import android.os.VibratorManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.annotation.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RelativeLayout mainLayout = findViewById(R.id.relativeLayout);
-        Button onBtn = findViewById(R.id.pushButtonOn);
-        Button offBtn = findViewById(R.id.pushButtonOff);
         ImageButton playBtn = findViewById(R.id.pushButtonPlay);
         ImageButton homeBtn = findViewById(R.id.pushButtonHome);
         ImageButton backBtn = findViewById(R.id.pushButtonBack);
@@ -44,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
         ImageButton settingsBtn = findViewById(R.id.pushButtonSettings);
         ImageButton keyboardBtn = findViewById(R.id.pushButtonKeyboard);
 
+        ImageButton powerBtn = findViewById(R.id.pushButtonPower);
         initSettings();
+
 
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
 
@@ -68,14 +71,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        onBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground( getBaseAddr() +  "/keypress/powerOn", "");
-                vibrate(50);
-        });
-        offBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/powerOff", "");
-                vibrate(50);
-        });
         playBtn.setOnClickListener(view -> {
                 httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/play", "");
                 vibrate(50);
@@ -137,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        });
+        powerBtn.setOnClickListener(view -> {
+                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/power", "");
+                vibrate(50);
         });
         keyboardBtn.setOnClickListener(view -> {
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);

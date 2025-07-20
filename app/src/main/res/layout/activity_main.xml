@@ -20,25 +20,13 @@
 
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/pushButtonOn"
+                <ImageButton
+                    android:id="@+id/pushButtonPower"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:backgroundTint="#3F51B5"
-                    android:focusable="true"
-                    android:text="On"
-                    android:textSize="30dp" />
-
-                <Button
-                    android:id="@+id/pushButtonOff"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:backgroundTint="#3F51B5"
-                    android:focusable="true"
-                    android:text="Off"
-                    android:textSize="30dp" />
+                    android:text=""
+                    android:src="@drawable/power"/>
             </LinearLayout>
 
 
