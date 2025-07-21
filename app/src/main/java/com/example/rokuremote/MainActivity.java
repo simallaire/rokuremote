@@ -187,13 +187,8 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
     private void vibrate(int ms) {
-        // Get the Vibrator service
         VibratorManager vibrator = (VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-
-        // Check if the device has a vibrator
         if (vibrator != null){
-            // Vibrate for a short duration (you can adjust the duration)
-            // Vibrate with vibration effect (API level 26 and above)
             vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE)));
         }
     }
