@@ -3,7 +3,7 @@
     <string name="appwidget_text">Roku Remote</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">Static Roku Remote</string>
-    <string name="roku_addr">192.168.0.6</string>
+    <string name="roku_addr">192.168.0.1</string>
     <string name="roku_port">8060</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="shared_settings_key">MySettings</string>
