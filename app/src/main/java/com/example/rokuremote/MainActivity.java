@@ -1,7 +1,6 @@
 package com.example.rokuremote;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +16,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.annotation.*;
+import android.widget.TextView;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+    private String rokuDeviceName = "Roku Device";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +52,22 @@ public class MainActivity extends AppCompatActivity {
         ImageButton forwardBtn = findViewById(R.id.pushButtonForward);
         ImageButton settingsBtn = findViewById(R.id.pushButtonSettings);
         ImageButton keyboardBtn = findViewById(R.id.pushButtonKeyboard);
-
         ImageButton powerBtn = findViewById(R.id.pushButtonPower);
+        TextView deviceNameTextView = findViewById(R.id.deviceName);
         initSettings();
 
 
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+
+        if(!updateDeviceName(deviceNameTextView)){
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+
+        }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleWithFixedDelay(() -> {
+            updateDeviceName(deviceNameTextView);
+        }, 0, 5, TimeUnit.SECONDS);
 
         mainLayout.setOnKeyListener((view, i, keyEvent) -> {
             if(keyEvent.getAction() != KeyEvent.ACTION_DOWN) {
@@ -72,61 +90,33 @@ public class MainActivity extends AppCompatActivity {
         });
 
         playBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/play", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("play");});
         homeBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/home", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("home");});
         backBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/back", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("back");});
         upBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/up", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("up");});
         downBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/down", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("down");});
         leftBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/left", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("left");});
         rightBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/right", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("right");});
         okBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/select", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("select");});
         volumeUpBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeUp", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("volumeUp");});
         volumeDownBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeDown", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("volumeDown");});
         muteBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeMute", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("volumeMute");});
         rewindBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/rev", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("rev");});
         forwardBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/fwd", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("fwd");});
         settingsBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/info", "");
-                vibrate(50);
-        });
+            sendKeypressCommand("info");});
         settingsBtn.setOnLongClickListener(view -> {
             vibrate(200);
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -149,27 +139,24 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    private void sendKeypressCommand(String command) {
+        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+        vibrate(10);
+        String response = httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/" + command, "");
+        vibrate(25);
+        Log.d("RokuCommand", "Response: " + response);
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         super.onKeyDown(keyCode, event);
-        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
-
-
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && event.getRepeatCount() == 0)
         {
-            Log.d ("onkeydown","volume down key");
-            vibrate(10);
-            httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeDown", "");
-            vibrate(25);
-
+           sendKeypressCommand("volumeDown");
         }
         else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && event.getRepeatCount() == 0)
         {
-            Log.d ("onkeydown","volume up key");
-            vibrate(10);
-            httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/volumeUp", "");
-            vibrate(25);
+            sendKeypressCommand("volumeUp");
         }
         return true;
     }
@@ -200,14 +187,49 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
     private void vibrate(int ms) {
-        // Get the Vibrator service
         VibratorManager vibrator = (VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-
-        // Check if the device has a vibrator
         if (vibrator != null){
-            // Vibrate for a short duration (you can adjust the duration)
-            // Vibrate with vibration effect (API level 26 and above)
             vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE)));
         }
     }
+    private String getRokuDeviceName() throws IOException {
+        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+        String response = httpAsyncTask.makeGetRequest(getBaseAddr());
+        Log.d("RokuInfo", "Response: " + response);
+        XMLParser xmlParser = new XMLParser();
+        Document document = xmlParser.parseXML(response);
+        Node device = document.getElementsByTagName("device").item(0).getChildNodes().item(1);
+        String deviceName = device.getFirstChild().getNodeValue();
+        Log.d("RokuInfo", "Device Name: " + deviceName);
+        return deviceName;
+    }
+    // Create recurring background task to check for updates
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reinitialize the settings in case they were changed
+        initSettings();
+        try {
+            rokuDeviceName = getRokuDeviceName();
+            TextView deviceNameTextView = findViewById(R.id.deviceName);
+            deviceNameTextView.setText(rokuDeviceName);
+        } catch (IOException e) {
+            Log.e("RokuInfo", "Error getting Roku device name", e);
+        }
+    }
+    private boolean updateDeviceName(TextView deviceNameTextView) {
+        int rokuDeviceNameColor = getResources().getColor(R.color.Connected_green);
+        try {
+            rokuDeviceName = getRokuDeviceName();
+        } catch (IOException e) {
+            Log.e("RokuInfo", "Error getting Roku device name", e);
+            rokuDeviceName = "Roku Device";
+            rokuDeviceNameColor = getResources().getColor(R.color.Not_connected_red);
+            return false;
+        }
+        deviceNameTextView.setTextColor(rokuDeviceNameColor);
+        deviceNameTextView.setText(rokuDeviceName);
+        return true;
+    }
+
 }

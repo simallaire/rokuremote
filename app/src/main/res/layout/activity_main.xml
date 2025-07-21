@@ -16,7 +16,7 @@
             <LinearLayout
                 android:id="@+id/horizontalLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="60dp"
 
                 android:orientation="horizontal">
 
@@ -194,6 +194,18 @@
             android:src="@drawable/settings" />
 
     </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+                <TextView
+                    android:id="@+id/deviceName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/appwidget_text"
+                    android:textColor="@color/design_default_color_background"
+                    android:textSize="20sp" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
