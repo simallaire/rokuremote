@@ -17,9 +17,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.annotation.*;
+import android.widget.TextView;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+    private String rokuDeviceName = "Roku Device";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +53,22 @@ public class MainActivity extends AppCompatActivity {
         ImageButton forwardBtn = findViewById(R.id.pushButtonForward);
         ImageButton settingsBtn = findViewById(R.id.pushButtonSettings);
         ImageButton keyboardBtn = findViewById(R.id.pushButtonKeyboard);
-
         ImageButton powerBtn = findViewById(R.id.pushButtonPower);
+        TextView deviceNameTextView = findViewById(R.id.deviceName);
         initSettings();
 
 
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+
+        if(!updateDeviceName(deviceNameTextView)){
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+
+        }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleWithFixedDelay(() -> {
+            updateDeviceName(deviceNameTextView);
+        }, 0, 5, TimeUnit.SECONDS);
 
         mainLayout.setOnKeyListener((view, i, keyEvent) -> {
             if(keyEvent.getAction() != KeyEvent.ACTION_DOWN) {
@@ -210,4 +229,30 @@ public class MainActivity extends AppCompatActivity {
             vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE)));
         }
     }
+    private String getRokuDeviceName() throws IOException {
+        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+        String response = httpAsyncTask.makeGetRequest(getBaseAddr());
+        Log.d("RokuInfo", "Response: " + response);
+        XMLParser xmlParser = new XMLParser();
+        Document document = xmlParser.parseXML(response);
+        Node device = document.getElementsByTagName("device").item(0).getChildNodes().item(1);
+        String deviceName = device.getFirstChild().getNodeValue();
+        Log.d("RokuInfo", "Device Name: " + deviceName);
+        return deviceName;
+    }
+    private boolean updateDeviceName(TextView deviceNameTextView) {
+        int rokuDeviceNameColor = getResources().getColor(R.color.Connected_green);
+        try {
+            rokuDeviceName = getRokuDeviceName();
+        } catch (IOException e) {
+            Log.e("RokuInfo", "Error getting Roku device name", e);
+            rokuDeviceName = "Roku Device";
+            rokuDeviceNameColor = getResources().getColor(R.color.Not_connected_red);
+            return false;
+        }
+        deviceNameTextView.setTextColor(rokuDeviceNameColor);
+        deviceNameTextView.setText(rokuDeviceName);
+        return true;
+    }
+
 }
