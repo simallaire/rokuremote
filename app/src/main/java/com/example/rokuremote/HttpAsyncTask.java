@@ -28,7 +28,32 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
         // Handle the result (UI updates, etc.)
         // For example, you can update a TextView with the result.
     }
+    public String makeGetRequest(String urlString) throws IOException {
+        StringBuilder result = new StringBuilder();
+        HttpURLConnection urlConnection = null;
 
+        try {
+            URL url = new URL(urlString);
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            // Set the request method to GET
+            urlConnection.setRequestMethod("GET");
+
+            // Read the response from the server
+            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return result.toString();
+    }
     private String makeHttpPostRequest(String urlString, String postData) throws IOException {
         StringBuilder result = new StringBuilder();
         HttpURLConnection urlConnection = null;
