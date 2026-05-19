@@ -5,9 +5,10 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.Intent;
 import android.widget.RemoteViews;
+
+import java.io.IOException;
 
 /**
  * Implementation of App Widget functionality.
@@ -29,7 +30,11 @@ public class NewAppWidget extends AppWidgetProvider {
     private static PendingIntent getPendingSelfIntent(Context context, String command) {
         Intent intent = new Intent(context, NewAppWidget.class);
         intent.putExtra("cmd: ", command);
-        new HttpAsyncTask().doInBackground(" " + "/keypress/" + command, "");
+        try {
+            HttpHelper.makeHttpPostRequest(" " + "/keypress/" + command, "");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
