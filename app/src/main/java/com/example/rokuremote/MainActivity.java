@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,112 +38,106 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RelativeLayout mainLayout = findViewById(R.id.relativeLayout);
-        ImageButton playBtn = findViewById(R.id.pushButtonPlay);
-        ImageButton homeBtn = findViewById(R.id.pushButtonHome);
-        ImageButton backBtn = findViewById(R.id.pushButtonBack);
-        ImageButton upBtn = findViewById(R.id.pushButtonUp);
-        ImageButton downBtn = findViewById(R.id.pushButtonDown);
-        ImageButton leftBtn = findViewById(R.id.pushButtonLeft);
-        ImageButton rightBtn = findViewById(R.id.pushButtonRight);
-        Button okBtn = findViewById(R.id.pushButtonOk);
-        ImageButton volumeUpBtn = findViewById(R.id.pushButtonVolumeUp);
-        ImageButton volumeDownBtn = findViewById(R.id.pushButtonVolumeDown);
-        ImageButton muteBtn = findViewById(R.id.pushButtonVolumeMute);
-        ImageButton rewindBtn = findViewById(R.id.pushButtonRewind);
-        ImageButton forwardBtn = findViewById(R.id.pushButtonForward);
         ImageButton settingsBtn = findViewById(R.id.pushButtonSettings);
         ImageButton keyboardBtn = findViewById(R.id.pushButtonKeyboard);
         ImageButton powerBtn = findViewById(R.id.pushButtonPower);
         TextView deviceNameTextView = findViewById(R.id.deviceName);
         initSettings();
 
-
-        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
-
         if(!updateDeviceName(deviceNameTextView)){
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
-
         }
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleWithFixedDelay(() -> {
             updateDeviceName(deviceNameTextView);
         }, 0, 5, TimeUnit.SECONDS);
 
-        mainLayout.setOnKeyListener((view, i, keyEvent) -> {
-            if(keyEvent.getAction() != KeyEvent.ACTION_DOWN) {
-                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                    httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/backspace", "");
-                    System.out.println("Key pressed: " + keyEvent.getKeyCode() + ", Backspace");
-                }else if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_SPACE) {
-                    httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/Lit_%20", "");
-                    System.out.println("Key pressed: " + keyEvent.getKeyCode() + ", Space");
-                }else if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    mainLayout.setFocusableInTouchMode(false);
-                }else{
-                    String inputChar = String.valueOf(getCharFromKeyCode(keyEvent.getKeyCode()));
-                    httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/Lit_" + inputChar, "");
-                    System.out.println("Key pressed: " + keyEvent.getKeyCode() + ", " + inputChar);
-                }
-            }
+        setKeyboardListener(mainLayout);
+        bindKeypressButtons();
 
-            return true;
-        });
-
-        playBtn.setOnClickListener(view -> {
-            sendKeypressCommand("play");});
-        homeBtn.setOnClickListener(view -> {
-            sendKeypressCommand("home");});
-        backBtn.setOnClickListener(view -> {
-            sendKeypressCommand("back");});
-        upBtn.setOnClickListener(view -> {
-            sendKeypressCommand("up");});
-        downBtn.setOnClickListener(view -> {
-            sendKeypressCommand("down");});
-        leftBtn.setOnClickListener(view -> {
-            sendKeypressCommand("left");});
-        rightBtn.setOnClickListener(view -> {
-            sendKeypressCommand("right");});
-        okBtn.setOnClickListener(view -> {
-            sendKeypressCommand("select");});
-        volumeUpBtn.setOnClickListener(view -> {
-            sendKeypressCommand("volumeUp");});
-        volumeDownBtn.setOnClickListener(view -> {
-            sendKeypressCommand("volumeDown");});
-        muteBtn.setOnClickListener(view -> {
-            sendKeypressCommand("volumeMute");});
-        rewindBtn.setOnClickListener(view -> {
-            sendKeypressCommand("rev");});
-        forwardBtn.setOnClickListener(view -> {
-            sendKeypressCommand("fwd");});
-        settingsBtn.setOnClickListener(view -> {
-            sendKeypressCommand("info");});
         settingsBtn.setOnLongClickListener(view -> {
             vibrate(200);
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
         });
-        powerBtn.setOnClickListener(view -> {
-                httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/power", "");
-                vibrate(50);
-        });
+        powerBtn.setOnClickListener(view -> sendKeypressCommand("power"));
         keyboardBtn.setOnClickListener(view -> {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                }
-                mainLayout.setFocusableInTouchMode(true);
-                mainLayout.requestFocus();
-
-                vibrate(50);
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            }
+            mainLayout.setFocusableInTouchMode(true);
+            mainLayout.requestFocus();
+            vibrate(50);
         });
-
     }
+
+    private void setKeyboardListener(RelativeLayout mainLayout) {
+        mainLayout.setOnKeyListener((view, i, keyEvent) -> {
+            if(keyEvent.getAction() != KeyEvent.ACTION_DOWN) {
+                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                    try {
+                        HttpHelper.makeHttpPostRequest(getBaseAddr() + "/keypress/backspace", "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println("Key pressed: " + keyEvent.getKeyCode() + ", Backspace");
+                }else if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_SPACE) {
+                    try {
+                        HttpHelper.makeHttpPostRequest(getBaseAddr() + "/keypress/Lit_%20", "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println("Key pressed: " + keyEvent.getKeyCode() + ", Space");
+                }else if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    mainLayout.setFocusableInTouchMode(false);
+                }else{
+                    String inputChar = String.valueOf(getCharFromKeyCode(keyEvent.getKeyCode()));
+                    try {
+                        HttpHelper.makeHttpPostRequest(getBaseAddr() + "/keypress/Lit_" + inputChar, "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println("Key pressed: " + keyEvent.getKeyCode() + ", " + inputChar);
+                }
+            }
+
+            return true;
+        });
+    }
+
+    private void bindKeypressButtons() {
+        int[] buttonIds = getResources().getIntArray(R.array.button_ids);
+        String[] buttonCommands = getResources().getStringArray(R.array.button_commands);
+
+        if (buttonIds.length != buttonCommands.length) {
+            throw new IllegalStateException("button_ids and button_commands must have the same length");
+        }
+
+        for (int i = 0; i < buttonIds.length; i++) {
+            int buttonId = buttonIds[i];
+            String command = buttonCommands[i];
+            if (findViewById(buttonId) != null) {
+                findViewById(buttonId).setOnClickListener(view -> sendKeypressCommand(command));
+            }
+        }
+    }
+
     private void sendKeypressCommand(String command) {
-        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
-        vibrate(10);
-        String response = httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/" + command, "");
+        vibrate(1);
+        int repeat = 1;
+        if (Objects.equals(command, "fwd") || Objects.equals(command, "rev")){
+            repeat = 5;
+        }
+        String response = null;
+        for (int i = 0; i < repeat; i++)
+            try {
+                response = HttpHelper.makeHttpPostRequest(getBaseAddr() + "/keypress/" + command, "");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         vibrate(25);
         Log.d("RokuCommand", "Response: " + response);
     }
@@ -193,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private String getRokuDeviceName() throws IOException {
-        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
-        String response = httpAsyncTask.makeGetRequest(getBaseAddr());
+
+        String response = HttpHelper.makeGetRequest(getBaseAddr());
         Log.d("RokuInfo", "Response: " + response);
         XMLParser xmlParser = new XMLParser();
         Document document = xmlParser.parseXML(response);

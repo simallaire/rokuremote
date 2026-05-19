@@ -27,9 +27,8 @@ public class XMLParser {
     public Document parseXML(String xmlData) {
         try {
             // Parse the XML data using the DocumentBuilder
-            Document document = documentBuilder.parse(new InputSource(new StringReader(xmlData)));
             // Process the parsed document as needed
-            return document;
+            return documentBuilder.parse(new InputSource(new StringReader(xmlData)));
         } catch (Exception e) {
             e.printStackTrace();
         }

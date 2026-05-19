@@ -9,4 +9,39 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <!-- Roku remote mapping: button ID -> keypress command -->
+    <integer-array name="button_ids">
+        <item>@id/pushButtonPlay</item>
+        <item>@id/pushButtonHome</item>
+        <item>@id/pushButtonBack</item>
+        <item>@id/pushButtonUp</item>
+        <item>@id/pushButtonDown</item>
+        <item>@id/pushButtonLeft</item>
+        <item>@id/pushButtonRight</item>
+        <item>@id/pushButtonOk</item>
+        <item>@id/pushButtonVolumeUp</item>
+        <item>@id/pushButtonVolumeDown</item>
+        <item>@id/pushButtonVolumeMute</item>
+        <item>@id/pushButtonRewind</item>
+        <item>@id/pushButtonForward</item>
+        <item>@id/pushButtonSettings</item>
+    </integer-array>
+
+    <string-array name="button_commands">
+        <item>play</item>
+        <item>home</item>
+        <item>back</item>
+        <item>up</item>
+        <item>down</item>
+        <item>left</item>
+        <item>right</item>
+        <item>select</item>
+        <item>volumeUp</item>
+        <item>volumeDown</item>
+        <item>volumeMute</item>
+        <item>rev</item>
+        <item>fwd</item>
+        <item>info</item>
+    </string-array>
 </resources>

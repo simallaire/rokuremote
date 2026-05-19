@@ -1,7 +1,5 @@
 package com.example.rokuremote;
 
-import android.os.AsyncTask;
-import java.util.concurrent.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,26 +7,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpAsyncTask extends AsyncTask<String, Void, String> {
+public class HttpHelper {
 
-    @Override
-    protected String doInBackground(String... params) {
-        String urlString = params[0];
-        String postData = params[1]; // Data to be sent in the POST request
-
-        try {
-            return makeHttpPostRequest(urlString, postData);
-        } catch (IOException e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        // Handle the result (UI updates, etc.)
-        // For example, you can update a TextView with the result.
-    }
-    public String makeGetRequest(String urlString) throws IOException {
+    static public String makeGetRequest(String urlString) throws IOException {
         StringBuilder result = new StringBuilder();
         HttpURLConnection urlConnection = null;
 
@@ -54,7 +35,7 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
         return result.toString();
     }
-    private String makeHttpPostRequest(String urlString, String postData) throws IOException {
+    static public String makeHttpPostRequest(String urlString, String postData) throws IOException {
         StringBuilder result = new StringBuilder();
         HttpURLConnection urlConnection = null;
 
