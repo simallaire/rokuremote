@@ -141,6 +141,13 @@ public class MainActivity extends AppCompatActivity {
         vibrate(25);
         Log.d("RokuCommand", "Response: " + response);
     }
+    private void sendKeypressCommand(String command) {
+        HttpAsyncTask httpAsyncTask = new HttpAsyncTask();
+        vibrate(10);
+        String response = httpAsyncTask.doInBackground(getBaseAddr() + "/keypress/" + command, "");
+        vibrate(25);
+        Log.d("RokuCommand", "Response: " + response);
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
